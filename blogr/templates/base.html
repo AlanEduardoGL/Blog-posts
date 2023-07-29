@@ -10,9 +10,12 @@
     <!-- Estilos de bootstrap y de app -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body>
+    {% block header %}
     <header class="p-3 text-bg-dark">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between">
@@ -21,8 +24,8 @@
                 </a>
 
                 <div class="text-end">
-                    <a href="auth/login.html" class="btn btn-outline-light me-2">Iniciar sesión</a>
-                    <a href="auth/register.html" class="btn btn-warning">Registrate</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light me-2">Iniciar sesión</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-warning">Registrate</a>
 
                     <a href="#" class="link-light text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
                         <img src="{{ url_for('static', filename='https://github.com/mdo.png') }}" alt="mdo" width="32" height="32" class="rounded-circle">
@@ -59,6 +62,7 @@
             </div>
         </div>
     </header>
+    {% endblock %}
 
     <!-- Sección de bloque de contendo -->
     {% block content %}
