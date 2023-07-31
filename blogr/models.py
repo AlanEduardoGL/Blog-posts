@@ -15,14 +15,14 @@ class User(db.Model):
     photo = db.Column(db.String(200))
 
     # ? Creamos el Metodo Constructor.
-    def __init_(self, username, email, password, photo=None):
+    def __init__(self, username, email, password, photo=None):
         self.username = username
         self.email = email
         self.password = password
         self.photo = photo
 
     # ? Colocamos como vamos a representar cada uno de estos elementos en el Shell.
-    def _repr__(self):
+    def __repr__(self):
         return f"User: {self.username}"
 
 
