@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
-
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css')}}">
 {% endblock %}
@@ -14,7 +12,7 @@
 <!-- Login -->
 <main class="form-signin w-100 m-auto text-center">
     <img class="mb-4" src="../img/bp-dark.png" alt="" width="72">
-    <h1 class="h3 mb-3 fw-normal">Iniciar sesión</h1>
+    <h1 class="h3 mb-3 fw-normal">{% block title %}Iniciar Sesión{% endblock %}</h1>
     <form>
         <div class="form-floating">
             <input type="email" class="form-control" id="email" placeholder="name@example.com">

@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 
-{% block title %}Register{% endblock %}
-
 {% block header %}
 
 {% endblock %}
@@ -12,7 +10,7 @@
 <div class="container col-xl-10 col-xxl-8 px-4 py-5">
     <div class="row align-items-center g-lg-5 py-5">
         <div class="col-lg-7 text-center text-lg-start">
-            <h1 class="display-4 fw-bold  mb-3 fst-italic">Registrate en BLOG POSTS</h1>
+            <h1 class="display-4 fw-bold  mb-3 fst-italic">{% block title %}Registrate en BLOG POSTS{% endblock %}</h1>
 
             <p class="col-lg-10 fs-4">Aquí podrás compartir tus ideas, pensamientos y experiencias con una comunidad
                 global de lectores.

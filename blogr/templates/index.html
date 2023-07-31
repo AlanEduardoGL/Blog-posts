@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Principal{% endblock %}
-
 {% block content %}
 <!-- Sección de bienvenida -->
 <section class="container">
     <div class="row">
         <div class="col-md-6 py-5">
-            <h1 class="display-4 fst-italic">Bienvenido a BLOG SPOTS</h1>
+            <h1 class="display-4 fst-italic">{% block title %}Bienvenido a BLOG SPOTS{% endblock %}</h1>
             <p>Aquí podrás compartir tus ideas, pensamientos y experiencias con una comunidad global de lectores.
                 Nuestra plataforma es fácil de usar y te permite publicar tus blogs en pocos pasos.
             </p>

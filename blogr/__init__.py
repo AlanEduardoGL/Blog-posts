@@ -1,8 +1,18 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
 
 def create_app():
     # ? Creamos Aplicación Flask
     app = Flask(__name__)
+
+    # ? Agregamos archivo config.py
+    app.config.from_object('config.Config')
+
+    # ? Inicializamos la base de datos
+    db.init_app(app)
 
     # ? Registramos las Vistas de home.py
     from blogr import home 
