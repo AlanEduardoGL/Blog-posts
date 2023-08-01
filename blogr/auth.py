@@ -153,7 +153,11 @@ def profile(id):
         error: Mensaje de error si la contraseña no cumple
         con lo requerido.
     """
-    user = User.query.get_or_404(id)
+    user = User.query.get(id)
+    
+    if not user:
+        flash("Usuario no encontrado.")
+        return redirect((url_for('home.index')))
 
     if request.method == "POST":
         user.username = request.form.get('username')
@@ -161,7 +165,7 @@ def profile(id):
 
         error = None
 
-        if len(password) != 0:
+        if password:
             user.password = generate_password_hash(password)
         elif len(password) > 0 and len(password) < 6:
             error = "La contraseña debe tener más de 5 caracteres."
@@ -169,8 +173,12 @@ def profile(id):
         if error is not None:
             flash((error))
         else:
-            db.session.commit()
-            return redirect(url_for('auth.profile', id=user.id))
+            try:
+                db.session.commit()
+                return redirect(url_for('auth.profile', id=user.id))
+            except Exception as e:
+                db.session.rollback()
+                error = "Error al guardar los cambios en la base de datos. Inténtalo de nuevo más tarde."
 
         flash(error)
 

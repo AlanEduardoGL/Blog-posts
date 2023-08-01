@@ -20,11 +20,11 @@
 
                 <div class="mb-3">
                     <label for="username" class="form-label">Nombre de usuario</label>
-                    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                    <input type="text" class="form-control" id="username" name="username" value="{{ user.username | safe }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email | safe }}" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">
