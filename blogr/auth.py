@@ -92,7 +92,8 @@ def load_logged_in_user():
     (antes de que se maneje una vista).
 
     Returns:
-        g.user: Obtenemos id del usuario de la session utilizada y es almacenado en (g.user).
+        g.user: Alamcena todos los datos del usuario 
+        activo en la session.
     """
     user_id = session.get('user_id')
 
