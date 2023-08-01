@@ -138,6 +138,39 @@ def login_required(view):
     return wrapped_view
 
 
-@bp.route('/profile')
-def profile():
-    return "Página de profile"
+@bp.route('/profile/<int:id>', methods=['GET', 'POST'])
+@login_required # ? Requiere session activa.
+def profile(id):
+    """
+    Function para editar el perfil del usuario.
+
+    Args:
+        id (int): Recibe el id del usuario para obtener todos los datos.
+
+    Returns:
+        redirect: (auth.profile) Si los cambios fueron correctos.
+        error: Mensaje de error si la contraseña no cumple
+        con lo requerido.
+    """
+    user = User.query.get_or_404(id)
+
+    if request.method == "POST":
+        user.username = request.form.get('username')
+        password = request.form.get('password')
+
+        error = None
+
+        if len(password) != 0:
+            user.password = generate_password_hash(password)
+        elif len(password) > 0 and len(password) < 6:
+            error = "La contraseña debe tener más de 5 caracteres."
+
+        if error is not None:
+            flash((error))
+        else:
+            db.session.commit()
+            return redirect(url_for('auth.profile', id=user.id))
+
+        flash(error)
+
+    return render_template('auth/profile.html', user=user)
