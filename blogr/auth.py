@@ -127,7 +127,7 @@ def login_required(view):
 
     Returns:
         redirect: (auth.login) Si el usuario no ha iniciado sesión, 
-        se redirige automáticamente a la página de inicio. 
+        se redirige automáticamente a la página de inicio.
     """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -175,10 +175,11 @@ def profile(id):
         else:
             try:
                 db.session.commit()
-                return redirect(url_for('auth.profile', id=user.id))
             except Exception as e:
                 db.session.rollback()
                 error = "Error al guardar los cambios en la base de datos. Inténtalo de nuevo más tarde."
+            else:  
+                return redirect(url_for('auth.profile', id=user.id))
 
         flash(error)
 
