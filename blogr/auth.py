@@ -176,8 +176,9 @@ def profile(id):
             try:
                 db.session.commit()
             except Exception as e:
+                error_message = str(e)
                 db.session.rollback()
-                error = "Error al guardar los cambios en la base de datos. Inténtalo de nuevo más tarde."
+                error = f"Error al guardar los cambios en la base de datos, inténtalo de nuevo más tarde. Código de error: {error_message}"
             else:  
                 return redirect(url_for('auth.profile', id=user.id))
 
