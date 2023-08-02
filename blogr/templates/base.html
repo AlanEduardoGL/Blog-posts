@@ -19,7 +19,8 @@
     <header class="p-3 text-bg-dark">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between">
-                <a href="{{ url_for('home.index') }}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <a href="{{ url_for('home.index') }}"
+                    class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                     <img src="{{ url_for('static', filename='img/bp-light.png') }}" alt="blog posts" width="40">
                 </a>
 
@@ -30,8 +31,13 @@
                     <a href="{{ url_for('auth.register') }}" class="btn btn-warning">Registrate</a>
                     {% else %}
                     <a href="#" class="link-light text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                        {% if g.user.photo is none %}
                         <img src="{{ url_for('static', filename='img/user-light.png') }}" alt="mdo" width="32"
                             height="32" class="rounded-circle">
+                        {% else %}
+                        <img src="{{ url_for('static', filename= g.user.photo) }}" alt="mdo" width="32" height="32"
+                            class="rounded-circle">
+                        {% endif %}
                     </a>
                     <ul class="dropdown-menu text-small">
 
@@ -42,18 +48,21 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        
-                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url_for('post.create') }}">
+
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                href="{{ url_for('post.create') }}">
                                 <span class="d-inline-block bg-success rounded-circle p-1"></span>
                                 Crear Blog
                             </a>
                         </li>
-                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url_for('post.posts') }}">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                href="{{ url_for('post.posts') }}">
                                 <span class="d-inline-block bg-primary rounded-circle p-1"></span>
                                 Mis Blogs
                             </a>
                         </li>
-                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url_for('auth.profile', id = g.user.id) }}">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                href="{{ url_for('auth.profile', id = g.user.id) }}">
                                 <span class="d-inline-block bg-info rounded-circle p-1"></span>
                                 Perfil
                             </a>
@@ -61,7 +70,8 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ url_for('auth.logout') }}">
+                        <li><a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                href="{{ url_for('auth.logout') }}">
                                 <span class="d-inline-block bg-danger rounded-circle p-1"></span>
                                 Cerrar sesión
                             </a>

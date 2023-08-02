@@ -15,6 +15,9 @@ from werkzeug.security import (
 )
 from .models import User
 from blogr import db
+# * Elimina espacios de una imagen y agrega barra baja.
+from werkzeug.utils import secure_filename
+
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -140,7 +143,7 @@ def login_required(view):
 
 
 @bp.route('/profile/<int:id>', methods=['GET', 'POST'])
-@login_required # ? Requiere session activa.
+@login_required  # ? Requiere session activa.
 def profile(id):
     """
     Function para editar el perfil del usuario.
@@ -149,12 +152,12 @@ def profile(id):
         id (int): Recibe el id del usuario para obtener todos los datos.
 
     Returns:
-        redirect: (auth.profile) Si los cambios fueron correctos.
+        redirect: Redirige a (auth.profile) si los cambios fueron correctos.
         error: Mensaje de error si la contraseña no cumple
         con lo requerido.
     """
     user = User.query.get(id)
-    
+
     if not user:
         flash("Usuario no encontrado.")
         return redirect((url_for('home.index')))
@@ -170,6 +173,14 @@ def profile(id):
         elif len(password) > 0 and len(password) < 6:
             error = "La contraseña debe tener más de 5 caracteres."
 
+        if request.files['photo']:
+            # * Obtenemos la imagen del formulario.
+            photo = request.files['photo']
+            # * Como se va a guardar la imagen.
+            photo.save(f'blogr/static/media/{secure_filename(photo.filename)}')
+            # * Gurdamos en el campo "photo" la imagen en la Base de Datos.
+            user.photo = f'media/{secure_filename(photo.filename)}'
+
         if error is not None:
             flash((error))
         else:
@@ -179,7 +190,7 @@ def profile(id):
                 error_message = str(e)
                 db.session.rollback()
                 error = f"Error al guardar los cambios en la base de datos, inténtalo de nuevo más tarde. Código de error: {error_message}"
-            else:  
+            else:
                 return redirect(url_for('auth.profile', id=user.id))
 
         flash(error)
