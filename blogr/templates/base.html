@@ -10,6 +10,7 @@
     <!-- Estilos de bootstrap y de app -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {{ ckeditor.load() }} <!-- ! Cargamos los archivos CKEditor  ! -->
     {% block head %}
     {% endblock %}
 </head>
