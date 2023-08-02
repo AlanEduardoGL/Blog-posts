@@ -10,23 +10,39 @@ from flask import (
 from .auth import login_required
 from .models import Post
 from blogr import db
+from flask_wtf import FlaskForm
+from wtforms import (
+    StringField,
+    TextAreaField,
+    SubmitField,
+    validators
+)
 
 bp = Blueprint('post', __name__, url_prefix='/post')
 
 
 @bp.route('/posts')
-@login_required
+@login_required  # ! Decorador para requerir la session en esta vista.
 def posts():
     posts = Post.query.all()
 
     return render_template('admin/posts.html', posts=posts)
 
 
+# ? Clase Formulario Create
+class MyForm(FlaskForm):
+    name = StringField("Nombre Post", validators=[validators.DataRequired])
+
 @bp.route('/create')
+@login_required  # ! Decorador para requerir la session en esta vista.
 def create():
-    return "Página de create"
+    form = MyForm()
+    
+    
+    return render_template('admin/create.html')
 
 
 @bp.route('/update')
+@login_required  # ! Decorador para requerir la session en esta vista.
 def update():
-    return "Página de update"
+    return render_template('admin/update.html')
