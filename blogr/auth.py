@@ -178,7 +178,7 @@ def profile(id):
             photo = request.files['photo']
             # * Como se va a guardar la imagen.
             photo.save(f'blogr/static/media/{secure_filename(photo.filename)}')
-            # * Gurdamos en el campo "photo" la imagen en la Base de Datos.
+            # * Guardamos en el campo "photo" la imagen en la Base de Datos.
             user.photo = f'media/{secure_filename(photo.filename)}'
 
         if error is not None:

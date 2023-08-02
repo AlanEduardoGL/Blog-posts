@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_ckeditor import CKEditor
 
 
 # ? Creamos instancia de la clase SQLAlchemy()
@@ -15,6 +16,9 @@ def create_app():
 
     # ? Inicializamos la base de datos y mandamos app.
     db.init_app(app)
+    
+    # ? Configuramos CKEditor
+    ckeditor = CKEditor(app)
 
     # ? Registramos las Vistas de home.py
     from blogr import home

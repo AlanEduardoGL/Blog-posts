@@ -10,3 +10,5 @@ class Config():
     DEBUG = True
     SECRET_KEY = 'dev'
     SQLALCHEMY_DATABASE_URI = POSTGRESQL
+    # * Configuramos CKEditor
+    CKEDITOR_PKG_TYPE = 'basic'
