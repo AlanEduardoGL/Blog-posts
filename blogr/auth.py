@@ -15,8 +15,8 @@ from werkzeug.security import (
 )
 from .models import User
 from blogr import db
-# * Elimina espacios de una imagen y agrega barra baja.
-from werkzeug.utils import secure_filename
+# ! Elimina espacios de una imagen y agrega barra baja.
+from werkzeug.utils import secure_filename 
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -36,10 +36,10 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # ? Registramos el usuario.
+        # Registramos el usuario.
         user = User(username, email, generate_password_hash(password))
 
-        # ? Validamos que correo no existan en la base de datos.
+        # Validamos que correo no existan en la base de datos.
         user_email = User.query.filter_by(email=email).first()
 
         error = None
@@ -86,7 +86,7 @@ def login():
     return render_template('auth/login.html')
 
 
-# ? Decorador para mantener/guardar la session.
+# ! Decorador para mantener/guardar la session.
 @bp.before_app_request
 def load_logged_in_user():
     """ 
@@ -118,7 +118,7 @@ def logout():
     return redirect(url_for('home.index'))
 
 
-# ? Decorador para requerir la session.
+# ! Decorador para requerir la session.
 def login_required(view):
     """
     Asegura que el usuario haya iniciado session
@@ -143,7 +143,7 @@ def login_required(view):
 
 
 @bp.route('/profile/<int:id>', methods=['GET', 'POST'])
-@login_required  # ? Requiere session activa.
+@login_required  # Está vista requiere session activa.
 def profile(id):
     """
     Function para editar el perfil del usuario.
@@ -174,11 +174,11 @@ def profile(id):
             error = "La contraseña debe tener más de 5 caracteres."
 
         if request.files['photo']:
-            # * Obtenemos la imagen del formulario.
+            # Obtenemos la imagen del formulario.
             photo = request.files['photo']
-            # * Como se va a guardar la imagen.
+            # Como se va a guardar la imagen.
             photo.save(f'blogr/static/media/{secure_filename(photo.filename)}')
-            # * Guardamos en el campo "photo" la imagen en la Base de Datos.
+            # Guardamos en el campo "photo" la imagen en la Base de Datos.
             user.photo = f'media/{secure_filename(photo.filename)}'
 
         if error is not None:
