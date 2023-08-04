@@ -85,12 +85,12 @@
     </header>
     {% endblock %}
 
-    <!-- Mensaje de error -->
+    <!-- Mensajes de error -->
     {% for massage in get_flashed_messages() %}
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-6 mx-auto">
-                <div class="alert {% block message %} alert-danger {% endblock %}" role="alert">
+                <div class="alert {% block message %}alert-danger{% endblock %}" role="alert">
                     {{ massage }}
                 </div>
             </div>

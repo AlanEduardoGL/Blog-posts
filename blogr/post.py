@@ -95,3 +95,21 @@ def create():
 @login_required  # ! Decorador para requerir la session en esta vista.
 def update():
     return render_template('admin/update.html')
+
+
+# @audit Route /delete_post
+@bp.route('/delete_post/<int:id_author>', methods=['GET', 'POST'])
+@login_required # ! Decorador para requerir la session en esta vista.
+def delete_post(id_author):
+    """
+    Ruta/vista que elimina el post seleccionado por el usuario.
+
+    Args:
+        id_author (int): id del author a eliminar.
+
+    Returns:
+        _type_: _description_
+    """
+    
+    
+    return render_template('admin/delete.html')
