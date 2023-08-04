@@ -17,6 +17,7 @@ from wtforms import (
     SubmitField,
     validators
 )
+from sqlalchemy.exc import SQLAlchemyError
 
 
 # Creamos Blueprint /post
@@ -27,6 +28,12 @@ bp = Blueprint('post', __name__, url_prefix='/post')
 @bp.route('/posts')
 @login_required  # ! Decorador para requerir la session en esta vista.
 def posts():
+    """
+    Ruta/vista que muestra todos los posts publicados por el usuario.
+
+    Returns:
+        render_template: Muestra la plantilla (admin/posts.html).
+    """
     posts = Post.query.all()
 
     return render_template('admin/posts.html', posts=posts)
@@ -53,7 +60,7 @@ def create():
         content = request.form.get('ckeditor')
 
         # Creamos nuevo post.
-        post = Post(g.user, url, title, info, content)
+        post = Post(g.user.id, url, title, info, content)
 
         error = None
 
@@ -61,16 +68,24 @@ def create():
         post_url = Post.query.filter_by(url=url).first()
 
         if post_url == None:
-            # Guardamos en la base de datos y confirmamos cambios.
-            db.session.add(post)
-            db.session.commit()
-            flash(f'El blog {post.title} se agrego correctamente.')
+            try:
+                # Guardamos en la base de datos y confirmamos cambios.
+                db.session.add(post)
+                db.session.commit()
+                flash(f'El blog "{post.title}" se agrego correctamente.')
 
-            return redirect(url_for('post.posts'))
+                return redirect(url_for('post.posts'))
+            
+            except SQLAlchemyError as e:
+                # Deshacer cambios en caso de error
+                db.session.rollback()
+                error = f'Error al guardar el post: {str(e)}'
+                flash(error)
+
         else:
             error = f'La URL "{url}" ya existe. Intenta nuevamente.'
 
-    flash(error)
+        flash(error)
 
     return render_template('admin/create.html')
 
