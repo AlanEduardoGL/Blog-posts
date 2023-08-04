@@ -4,7 +4,10 @@ Archivo que contiene la configuración del proyecto.
 
 
 SQLITE = "sqlite:///project.db"
-POSTGRESQL = "postgresql+psycopg2://postgres:root@localhost:5432/blogposts_db"
+# ! Cambiar el Port si es Windows o Macbook !
+# ! Windows Port: 5432 "Versión PostgreSQL 15" !
+# ! Macbook Port: 5433 "Versión PostgreSQL 11" ! 
+POSTGRESQL = "postgresql+psycopg2://postgres:root@localhost:5433/blogposts_db"
 
 class Config():
     DEBUG = True
