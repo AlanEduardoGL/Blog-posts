@@ -31,7 +31,7 @@ def posts():
 
 # ? Clase Formulario Create
 class MyForm(FlaskForm):
-    name = StringField("Nombre Post", validators=[validators.DataRequired])
+    name = StringField("Nombre Post", validators=[validators.DataRequired()])
 
 @bp.route('/create')
 @login_required  # ! Decorador para requerir la session en esta vista.
