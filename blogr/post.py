@@ -18,9 +18,12 @@ from wtforms import (
     validators
 )
 
+
+# Creamos Blueprint /post
 bp = Blueprint('post', __name__, url_prefix='/post')
 
 
+# @audit Route /posts
 @bp.route('/posts')
 @login_required  # ! Decorador para requerir la session en esta vista.
 def posts():
@@ -29,19 +32,22 @@ def posts():
     return render_template('admin/posts.html', posts=posts)
 
 
-# ? Clase Formulario Create
+# @audit Class MyForm
 class MyForm(FlaskForm):
     name = StringField("Nombre Post", validators=[validators.DataRequired()])
 
+
+# @audit Route /create
 @bp.route('/create')
 @login_required  # ! Decorador para requerir la session en esta vista.
 def create():
+    # Instanciamos la Class MyForm
     form = MyForm()
-    
-    
+
     return render_template('admin/create.html')
 
 
+# @audit Route /update
 @bp.route('/update')
 @login_required  # ! Decorador para requerir la session en esta vista.
 def update():

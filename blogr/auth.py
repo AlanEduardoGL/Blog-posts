@@ -15,17 +15,20 @@ from werkzeug.security import (
 )
 from .models import User
 from blogr import db
-# ! Elimina espacios de una imagen y agrega barra baja.
-from werkzeug.utils import secure_filename 
+# Elimina espacios de una imagen y agrega barra baja.
+from werkzeug.utils import secure_filename
 
 
+# Creamos Blueprint /auth
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
+# @audit Route /register
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     """
-    Function que registra un nuevo usuario.
+    Ruta/vista que registra un nuevo usuario.
+    Recibe methods 'GET' y 'POST'.
 
     Returns:
         redirect: (auth.login) Nos redirige al login.
@@ -56,10 +59,12 @@ def register():
     return render_template('auth/register.html')
 
 
+# @audit Route /login
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    Function para iniciar session.
+    Ruta/vista para iniciar sesión del usuario.
+    Recibe methods 'GET' y 'POST'.
 
     Returns:
         redirect: (post.posts) Nos redirige a nuestros posts publicados.
@@ -86,7 +91,7 @@ def login():
     return render_template('auth/login.html')
 
 
-# ! Decorador para mantener/guardar la session.
+# @audit Function load_logged_in_user()
 @bp.before_app_request
 def load_logged_in_user():
     """ 
@@ -106,10 +111,11 @@ def load_logged_in_user():
         g.user = User.query.get_or_404(user_id)
 
 
+# @audit Route /logout
 @bp.route('/logout')
 def logout():
     """
-    Function para cerrar session.
+    Ruta/vista para cerrar session del usuario.
 
     Returns:
         redirect: Nos redirije al index principal.
@@ -118,7 +124,7 @@ def logout():
     return redirect(url_for('home.index'))
 
 
-# ! Decorador para requerir la session.
+# @audit Function login_required()
 def login_required(view):
     """
     Asegura que el usuario haya iniciado session
@@ -142,11 +148,13 @@ def login_required(view):
     return wrapped_view
 
 
+# @audit Route /profile
 @bp.route('/profile/<int:id>', methods=['GET', 'POST'])
 @login_required  # Está vista requiere session activa.
 def profile(id):
     """
-    Function para editar el perfil del usuario.
+    Ruta/vista que edita el perfil del usuario.
+    Recibe methods 'GET' y 'POST'.
 
     Args:
         id (int): Recibe el id del usuario para obtener todos los datos.
