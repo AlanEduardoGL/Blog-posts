@@ -59,7 +59,7 @@ def create():
         # Llamamos "ckeditor" para obtener content
         content = request.form.get('ckeditor')
 
-        # Creamos nuevo post.
+        # Creamos nuevo post incluyendo el id del usuario.
         post = Post(g.user.id, url, title, info, content)
 
         error = None
