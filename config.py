@@ -16,4 +16,11 @@ class Config():
     SECRET_KEY = 'dev'
     SQLALCHEMY_DATABASE_URI = POSTGRESQL
     # * Configuramos CKEditor
-    CKEDITOR_PKG_TYPE = 'basic'
+    """
+    basic
+    standard （default value）
+    full
+    standard-all (only available from CDN)
+    full-all (only available from CDN)
+    """
+    CKEDITOR_PKG_TYPE = 'full'

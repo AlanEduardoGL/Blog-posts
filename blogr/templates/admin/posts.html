@@ -7,7 +7,7 @@
         <h2 class="mb-3 mt-3">{% block title %}Tus publicaciones, {{ g.user.username }}.{% endblock %}</h2>
         <div class="d-flex justify-content-between mb-3">
             <p>¡Bienvenido {{ g.user.username }}, este es panel de administración de blogs!</p>
-            <a href="create.html" class="btn btn-outline-success">AÑADIR BLOG</a>
+            <a href="{{ url_for('post.create') }}" class="btn btn-outline-success">CREAR UN BLOG</a>
         </div>
     </div>
     <table class=" table">
