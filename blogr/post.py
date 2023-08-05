@@ -150,7 +150,8 @@ def delete(id):
 
     Returns:
         redirect: Nos redirige a los post públicados
-        por el usuario una vez eliminado. Con un mensaje de exito.
+        por el usuario si fue o no eliminado el post.
+        Con mensaje error o success.
     """
     try:
         # Obtenemos todo los datos del post públicado.
@@ -168,6 +169,7 @@ def delete(id):
     except SQLAlchemyError as e:
         # Deshacer cambios en caso de error
         db.session.rollback()
+        
         flash(f'Error al eliminar blog "{post.title}". Código error => {str(e)}')
 
-    return render_template('admin/posts.html')
+        return redirect(url_for('post.posts'))
