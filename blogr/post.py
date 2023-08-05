@@ -75,7 +75,7 @@ def create():
                 flash(f'El blog "{post.title}" se agrego correctamente.')
 
                 return redirect(url_for('post.posts'))
-            
+
             except SQLAlchemyError as e:
                 # Deshacer cambios en caso de error
                 db.session.rollback()
@@ -91,25 +91,83 @@ def create():
 
 
 # @audit Route /update
-@bp.route('/update')
+@bp.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required  # ! Decorador para requerir la session en esta vista.
-def update():
-    return render_template('admin/update.html')
+def update(id):
+    """
+    Routa/vista que actualiza un post publicado
+    por el usuario.
+
+    Args:
+        id (int): id del post a editar
+
+    Returns:
+        redirect: Nos redirige a los posts del usuario
+        en caso de exito.
+        render_template: Nos redirige a udate.html en caso de error.
+    """
+    try:
+        # Obtenemos todo los datos del post públicado.
+        post = Post.query.get_or_404(id)
+
+    except SQLAlchemyError as e:
+        # Deshacer cambios en caso de error
+        db.session.rollback()
+        flash(
+            f'No existe post públicado con el id {id}: Código error => {str(e)}')
+
+    if request.method == 'POST':
+        post.title = request.form.get('title')
+        post.info = request.form.get('info')
+        post.content = request.form.get('content')
+
+        try:
+            # Confirmamos los cambios a la base de datos.
+            db.session.commit()
+
+        except SQLAlchemyError as e:
+            # Deshacer cambios en caso de error
+            db.session.rollback()
+            flash(f'Ha ocurrido un error al actualizar el blog {post.title}. Inténtalo de nuevo. Código error => {str(e)}')
+
+        else:
+            flash(f'El blog {post.title} se actualizo correctamente.')
+
+            return redirect(url_for('post.posts'))
+
+    return render_template('admin/update.html', post=post)
 
 
-# @audit Route /delete_post
-@bp.route('/delete_post/<int:id_author>', methods=['GET', 'POST'])
-@login_required # ! Decorador para requerir la session en esta vista.
-def delete_post(id_author):
+# @audit Route /delete
+@bp.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required  # ! Decorador para requerir la session en esta vista.
+def delete(id):
     """
     Ruta/vista que elimina el post seleccionado por el usuario.
 
     Args:
-        id_author (int): id del author a eliminar.
+        id (int): id del post a eliminar.
 
     Returns:
-        _type_: _description_
+        redirect: Nos redirige a los post públicados
+        por el usuario una vez eliminado. Con un mensaje de exito.
     """
-    
-    
-    return render_template('admin/delete.html')
+    try:
+        # Obtenemos todo los datos del post públicado.
+        post = Post.query.get_or_404(id)
+
+        # Eliminamos el post.
+        db.session.delete(id)
+        # Confirmamos los cambios en al base de datos.
+        db.session.commit()
+
+        flash(f'Se elimino con exito el blog "{post.title}".')
+
+        return redirect(url_for('post.posts'))
+
+    except SQLAlchemyError as e:
+        # Deshacer cambios en caso de error
+        db.session.rollback()
+        flash(f'Error al eliminar blog "{post.title}". Código error => {str(e)}')
+
+    return render_template('admin/posts.html')

@@ -23,8 +23,8 @@
             <tr>
                 <td>{{ post.title }}</td>
                 <td>
-                    <a href="{{ url_for('post.update', id = ) }}" class="btn btn-sm btn-warning">Editar</a>
-                    <a href="{{ url_for('post.delete_post', id_author = post.author) }}" class="btn btn-sm btn-danger">Eliminar</a>
+                    <a href="{{ url_for('post.update', id = post.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="{{ url_for('post.delete', id = post.id) }}" class="btn btn-sm btn-danger">Eliminar</a>
                 </td>
             </tr>
             {% endif %}
