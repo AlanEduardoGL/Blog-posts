@@ -158,7 +158,7 @@ def delete(id):
         post = Post.query.get_or_404(id)
 
         # Eliminamos el post.
-        db.session.delete(id)
+        db.session.delete(post)
         # Confirmamos los cambios en al base de datos.
         db.session.commit()
 
