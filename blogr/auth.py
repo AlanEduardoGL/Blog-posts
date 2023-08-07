@@ -17,6 +17,7 @@ from .models import User
 from blogr import db
 # Elimina espacios de una imagen y agrega barra baja.
 from werkzeug.utils import secure_filename
+from sqlalchemy.exc import SQLAlchemyError
 
 
 # Creamos Blueprint /auth
@@ -47,10 +48,17 @@ def register():
 
         error = None
 
-        if user_email == None:
-            db.session.add(user)
-            db.session.commit()
-            return redirect(url_for('auth.login'))
+        if user_email is None:
+            try:
+                db.session.add(user)
+                db.session.commit()
+
+            except SQLAlchemyError as e:
+                error = f'Error interno al registrar el usuario "{username}". Mensaje: {str(e)}.'
+
+            else:
+                return redirect(url_for('auth.login'))
+
         else:
             error = f"El correo {email} ya se encuentra registrado."
 
@@ -78,7 +86,7 @@ def login():
 
         error = None
 
-        if user == None or not check_password_hash(user.password, password):
+        if user is None or not check_password_hash(user.password, password):
             error = "El correo y/o contraseña ingresados son incorrectos."
         else:
             if error is None:
@@ -108,7 +116,12 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = User.query.get_or_404(user_id)
+        try:
+            g.user = User.query.get(user_id)
+
+        except SQLAlchemyError as e:
+            print(
+                f'No existe usuario registrado con id "{user_id}". Mensaje: {str(e)}.')
 
 
 # @audit Route /logout
@@ -120,8 +133,15 @@ def logout():
     Returns:
         redirect: Nos redirije al index principal.
     """
-    session.clear()
-    return redirect(url_for('home.index'))
+    try:
+        session.clear()
+
+    except SQLAlchemyError as e:
+        print(
+            f'Error interno al cerrar sesión. Intenta nuevamente. Mensaje: {str(e)}')
+
+    else:
+        return redirect(url_for('home.index'))
 
 
 # @audit Function login_required()
@@ -168,6 +188,7 @@ def profile(id):
 
     if not user:
         flash("Usuario no encontrado.")
+
         return redirect((url_for('home.index')))
 
     if request.method == "POST":
@@ -182,22 +203,27 @@ def profile(id):
             error = "La contraseña debe tener más de 5 caracteres."
 
         if request.files['photo']:
-            # Obtenemos la imagen del formulario.
-            photo = request.files['photo']
-            # Como se va a guardar la imagen.
-            photo.save(f'blogr/static/media/{secure_filename(photo.filename)}')
-            # Guardamos en el campo "photo" la imagen en la Base de Datos.
-            user.photo = f'media/{secure_filename(photo.filename)}'
+            try:
+                # Obtenemos la imagen del formulario.
+                photo = request.files['photo']
+                # Como se va a guardar la imagen.
+                photo.save(f'blogr/static/media/{secure_filename(photo.filename)}')
+                # Guardamos en el campo "photo" la imagen en la Base de Datos.
+                user.photo = f'media/{secure_filename(photo.filename)}'
+                
+            except SQLAlchemyError as e:
+                error = f'Error al guardar nueva foto de perfíl. Intenta nuevamente. Mensaje: {str(e)}.'
 
         if error is not None:
-            flash((error))
+            flash(error)
         else:
             try:
                 db.session.commit()
+
             except Exception as e:
-                error_message = str(e)
                 db.session.rollback()
-                error = f"Error al guardar los cambios en la base de datos, inténtalo de nuevo más tarde. Código de error: {error_message}"
+                error = f"Error al guardar los cambios en la base de datos, inténtalo de nuevo más tarde. Código de error: {str(e)}"
+
             else:
                 return redirect(url_for('auth.profile', id=user.id))
 
