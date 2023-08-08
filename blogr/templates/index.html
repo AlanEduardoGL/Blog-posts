@@ -2,7 +2,7 @@
 
 {% block content %}
 <!-- Sección de bienvenida -->
-<section class="container">
+<section class="container" {{ value }}>
     <div class="row">
         <div class="col-md-6 py-5">
             <h1 class="display-4 fst-italic">{% block title %}Bienvenido a BLOG SPOTS{% endblock %}</h1>
@@ -38,9 +38,9 @@
             </p>
 
             <div class="col container">
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
-                    <button type="button" class="btn btn-primary btn-lg">Buscar</button>
+                <form class="d-flex" method="post">
+                    <input class="form-control me-2" type="search" name="search" placeholder="Buscar" aria-label="Search">
+                    <button type="submit" class="btn btn-primary btn-lg">Buscar</button>
                 </form>
             </div>
         </div>
@@ -49,83 +49,25 @@
 
 <main class="container py-5">
     <div class="row">
+        {% for post in posts | reverse %}
         <div class="col-md-6">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">Etiquetas HTML</h3>
-                    <span class="mb-1 text-muted">Nov 12</span>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
-                    <a href="blog.html" class="stretched-link">Continuar leendo</a>
+                    <h3 class="mb-0">{{ post.title }}</h3>
+                    <p class="card-text mb-auto">{{ post.info }}</p>
+                    <a href="{{ url_for('home.blog', url = post.url) }}" class="stretched-link">Continuar leendo</a>
+                    <p class="card-text mt-3">
+                        {% if get_user(post.author).photo is none %}
+                        <img src="{{ url_for('static', filename='img/user-dark.png') }}" alt="mod" width="30" class="rounded-circle">
+                        {% else %}
+                        <img src="{{ url_for('static', filename=get_user(post.author).photo) }}" alt="mod" width="30" class="rounded-circle">
+                        {% endif %}
+                        <span class="mb-1 text-muted"><b>{{ get_user(post.author).username }}</b> | {{ post.created.strftime('%d de %B %Y') }}</span>
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">Etiquetas HTML que deves conocer</h3>
-                    <span class="mb-1 text-muted">Nov 12</span>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
-                    <a href="blog.html" class="stretched-link">Continuar leendo</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">Etiquetas HTML que deves conocer</h3>
-                    <span class="mb-1 text-muted">Nov 12</span>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
-                    <a href="blog.html" class="stretched-link">Continuar leendo</a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">Etiquetas HTML</h3>
-                    <span class="mb-1 text-muted">Nov 12</span>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
-                    <a href="blog.html" class="stretched-link">Continuar leendo</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">Etiquetas HTML que deves conocer</h3>
-                    <span class="mb-1 text-muted">Nov 12</span>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
-                    <a href="blog.html" class="stretched-link">Continuar leendo</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0">Etiquetas HTML que deves conocer</h3>
-                    <span class="mb-1 text-muted">Nov 12</span>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural
-                        lead-in to
-                        additional content.</p>
-                    <a href="blog.html" class="stretched-link">Continuar leendo</a>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </main>
 {% endblock %}
