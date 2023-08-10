@@ -128,7 +128,8 @@ def update(id):
         except SQLAlchemyError as e:
             # Deshacer cambios en caso de error
             db.session.rollback()
-            flash(f'Ha ocurrido un error al actualizar el blog {post.title}. Inténtalo de nuevo. Código error => {str(e)}')
+            flash(
+                f'Ha ocurrido un error al actualizar el blog {post.title}. Inténtalo de nuevo. Código error => {str(e)}')
 
         else:
             flash(f'El blog {post.title} se actualizo correctamente.')
@@ -136,6 +137,33 @@ def update(id):
             return redirect(url_for('post.posts'))
 
     return render_template('admin/update.html', post=post)
+
+
+# @audit Route /confirm
+@bp.route('/confirm/<int:id>', methods=['GET', 'POST'])
+@login_required  # ! Decorador para requerir la session en esta vista.
+def confirm(id):
+    """
+    Ruta/vista que confirma la eliminación
+    de un blog públicado por el usuario.
+
+    Args:
+        id (int): id del blog a eliminar.
+
+    Returns:
+        render_template: Nos envia a la plantilla de confirmación.
+        post: Enviamos tods la información del blog a eliminar.
+    """
+    try:
+        # Obtenemos todo los datos del post a eliminar.
+        post = Post.query.get_or_404(id)
+
+    except SQLAlchemyError as e:
+        flash(f'El blog solicitado no existe. Mensaje: {str(e)}', 'error')
+        return redirect(url_for('post.confirm'))
+
+    else:
+        return render_template('admin/confirm.html', post=post)
 
 
 # @audit Route /delete
@@ -169,7 +197,7 @@ def delete(id):
     except SQLAlchemyError as e:
         # Deshacer cambios en caso de error
         db.session.rollback()
-        
-        flash(f'Error al eliminar blog "{post.title}". Código error => {str(e)}')
 
+        flash(
+            f'Error al eliminar blog "{post.title}". Código error => {str(e)}')
         return redirect(url_for('post.posts'))

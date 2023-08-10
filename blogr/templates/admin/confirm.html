@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h5 class="card-header">{% block title %}Confirma la Eliminación{% endblock %}</h5>
+    <div class="card-body">
+        <h4 class="card-title">¿Deseas eliminar de manera permanente el siguiente Blog?</h4>
+        <br>
+        <h3 class="card-text">{{ post.title }}</h3>
+        <br>
+        <a href="{{ url_for('post.posts') }}" class="btn btn-primary">Mantener</a>
+        <a href="{{ url_for('post.delete', id = post.id) }}" class="btn btn-danger">Eliminar</a>
+    </div>
+</div>
+{% endblock %}
+
+<!-- Agregamos el bloque de message -->
+{% block message %} alert-danger {% endblock %}
