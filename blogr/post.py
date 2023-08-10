@@ -152,7 +152,7 @@ def confirm(id):
 
     Returns:
         render_template: Nos envia a la plantilla de confirmación.
-        post: Enviamos tods la información del blog a eliminar.
+        post: Enviamos todos la información del blog a eliminar.
     """
     try:
         # Obtenemos todo los datos del post a eliminar.
@@ -160,7 +160,7 @@ def confirm(id):
 
     except SQLAlchemyError as e:
         flash(f'El blog solicitado no existe. Mensaje: {str(e)}', 'error')
-        return redirect(url_for('post.confirm'))
+        return redirect(url_for('post.posts'))
 
     else:
         return render_template('admin/confirm.html', post=post)
